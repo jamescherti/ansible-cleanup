@@ -36,18 +36,24 @@ class InvalidFileFormat(Exception):
 
 
 class AnsibleData:
-    def __init__(self, file_name: os.PathLike):
+    """Represents the loaded Ansible YAML data."""
+
+    def __init__(self, file_name: os.PathLike) -> None:
+        """Initialize the AnsibleData instance with a file."""
         self.file_name = Path(file_name)
         self._data_loader = DataLoader()
         self.data = self._data_loader.load_from_file(str(file_name))
 
 
-class FindImports():
+class FindImports:
+    """Finds all imports and includes recursively in an Ansible file."""
+
     def __init__(self,
                  file_name: os.PathLike,
                  base_dir: os.PathLike,
                  recursive: bool = True,
-                 ignore_files: Union[set[Path], None] = None):
+                 ignore_files: Union[set[Path], None] = None) -> None:
+        """Initialize FindImports with the target file and base directory."""
         self._needles = {
             # Roles
             "import_role": "roles",
@@ -96,7 +102,8 @@ class FindImports():
             except KeyError:
                 self.imports[self.file_name][category] = set()
 
-    def find_imports(self):
+    def find_imports(self) -> None:
+        """Execute the search for Ansible imports and includes."""
         self._find_imports_recursive(self.ansible_data.data)
         if not self.recursive:
             return
@@ -130,15 +137,18 @@ class FindImports():
         self.failed = failed
         self.ignore_files = ignore_files
 
-    def get_all_files(self):
-        result = set()
+    def get_all_files(self) -> set[Path]:
+        """Return a set of all file paths discovered during the search."""
+        result: set[Path] = set()
         for file_name, categories in self.imports.items():
-            result |= {file_name}
+            result.add(Path(file_name))
             for _, files in categories.items():
-                result |= files
+                for item in files:
+                    result.add(Path(item))
         return result
 
-    def merge(self, find_imports: 'FindImports'):
+    def merge(self, find_imports: 'FindImports') -> None:
+        """Merge the imports and failures from another FindImports instance."""
         self.failed |= find_imports.failed
         self.ignore_files |= find_imports.ignore_files
         self.roles |= find_imports.roles
@@ -170,19 +180,20 @@ class FindImports():
                                    AnsibleUnicode) or isinstance(data,
                                                                  (list, dict)))
 
-    def _add_import(self, category: str, file_name: Union[str, os.PathLike]):
+    def _add_import(self, category: str,
+                    file_name: Union[str, os.PathLike]) -> None:
         if category == "roles":
             self.roles.add(str(file_name))
         else:
             file_name = self.base_dir.joinpath(file_name)
             self.imports[self.file_name][category].add(file_name)
 
-    def _find_imports_recursive(self, data: DataLoader):
+    def _find_imports_recursive(self, data: Any) -> None:
         error = False
         error_data = None
-        if isinstance(data, AnsibleSequence):
+        if isinstance(data, (AnsibleSequence, list)):
             self._parse_ansible_sequence(data)
-        elif isinstance(data, AnsibleMapping):
+        elif isinstance(data, (AnsibleMapping, dict)):
             (error_data, error) = self._parse_ansible_mapping(data)
         elif not self._is_supported_ansible_type(data):
             error_data = data
@@ -193,11 +204,13 @@ class FindImports():
                        f"{type(error_data)}: {error_data}")
             raise InvalidFileFormat(err_str)
 
-    def _parse_ansible_sequence(self, data: AnsibleSequence):
+    def _parse_ansible_sequence(
+            self, data: Union[AnsibleSequence, list]) -> None:
         for item in data:
             self._find_imports_recursive(item)
 
-    def _parse_ansible_mapping(self, data: AnsibleMapping):
+    def _parse_ansible_mapping(
+            self, data: Union[AnsibleMapping, dict]) -> tuple[Any, bool]:
         error_data = data
         error = False
         for ansible_func, sub_data in data.items():
@@ -213,7 +226,8 @@ class FindImports():
                 continue
 
             # Other
-            if isinstance(sub_data, (AnsibleMapping, AnsibleSequence)):
+            if isinstance(sub_data, (AnsibleMapping,
+                          dict, AnsibleSequence, list)):
                 self._find_imports_recursive(sub_data)
                 continue
 
@@ -226,7 +240,8 @@ class FindImports():
         return (error_data, error)
 
     def _parse_ansible_func(self, ansible_func: str,
-                            data: Union[AnsibleMapping, AnsibleSequence]):
+                            data: Union[AnsibleMapping, AnsibleSequence,
+                                        dict, list]) -> bool:
         """Parse an Ansible function/module."""
         category = self._ansible_func_to_category(ansible_func)
         if category:
@@ -237,7 +252,8 @@ class FindImports():
         return False
 
     def _parse_playbook_roles(self, data: Union[AnsibleMapping,
-                                                AnsibleSequence]):
+                                                AnsibleSequence,
+                                                dict, list]) -> None:
         """Parse the roles of a Playbook.
 
         Example:
