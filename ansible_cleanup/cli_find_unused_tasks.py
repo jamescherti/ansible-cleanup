@@ -90,7 +90,7 @@ def command_line_interface() -> None:
     for file_name in sorted(all_yaml_files):
         print(file_name)
 
-    print()
+    # print()
 
     # Show imports
     # for item in playbook.get_all_files():
