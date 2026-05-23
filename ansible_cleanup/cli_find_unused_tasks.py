@@ -92,8 +92,6 @@ def command_line_interface() -> None:
 
     print()
 
-    sys.exit(0)
-
     # Show imports
     # for item in playbook.get_all_files():
     #     print(item)
@@ -103,28 +101,28 @@ def command_line_interface() -> None:
     #     print()
     # sys.exit(0)
 
-    if all_yaml_files:
-        print("Detailed imports:")
-        print("-----------------")
-        for import_file in sorted(playbook.imports.keys()):
-            categories = playbook.imports[import_file]
-            print(import_file)
-            print("-" * len(str(import_file)))
-            for category, imported_files in categories.items():
-                if not imported_files:
-                    continue
-
-                print(f"{category}:")
-                for imported_file in imported_files:
-                    print(f"    - {imported_file}")
-                print()
-
-    if playbook.roles:
-        print("Roles:")
-        print("-----")
-        for item in sorted(playbook.roles):
-            print(f"  - {item}")
-        print()
+    # if all_yaml_files:
+    #     print("Detailed imports:")
+    #     print("-----------------")
+    #     for import_file in sorted(playbook.imports.keys()):
+    #         categories = playbook.imports[import_file]
+    #         print(import_file)
+    #         print("-" * len(str(import_file)))
+    #         for category, imported_files in categories.items():
+    #             if not imported_files:
+    #                 continue
+    #
+    #             print(f"{category}:")
+    #             for imported_file in imported_files:
+    #                 print(f"    - {imported_file}")
+    #             print()
+    #
+    # if playbook.roles:
+    #     print("Roles:")
+    #     print("-----")
+    #     for item in sorted(playbook.roles):
+    #         print(f"  - {item}")
+    #     print()
 
     sys.exit(0)
 
