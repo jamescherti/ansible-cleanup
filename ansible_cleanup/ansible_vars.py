@@ -30,10 +30,13 @@ from .helpers import find_yaml_files
 
 
 class AnsibleVars:
+    """Manage and validate Ansible host and group variables."""
+
     def __init__(self,
                  hosts_file: os.PathLike,
                  host_vars_dir: os.PathLike = Path('host_vars'),
-                 group_vars_dir: os.PathLike = Path('group_vars')):
+                 group_vars_dir: os.PathLike = Path('group_vars')) -> None:
+        """Initialize the AnsibleVars instance with the inventory file."""
         self.hosts_file = Path(hosts_file)
         self.base_dir = Path(self.hosts_file).parent
 
@@ -52,12 +55,15 @@ class AnsibleVars:
             sources=[str(self.hosts_file)])
 
     def get_hosts(self) -> set[str]:
+        """Return a set of all host names defined in the inventory."""
         return set(map(str, self.inventory_manager.get_hosts()))
 
     def get_groups(self) -> set[str]:
+        """Return a set of all group names defined in the inventory."""
         return set(self.inventory_manager.get_groups_dict().keys())
 
     def find_unused_group_vars(self) -> set[Path]:
+        """Identify and return a set of unused group_vars YAML files."""
         yaml_files = find_yaml_files(self.group_vars_dir)
         for group in self.get_groups():
             yaml_files -= {Path(self.group_vars_dir).joinpath(f"{group}.yml")}
@@ -65,6 +71,7 @@ class AnsibleVars:
         return yaml_files
 
     def find_unused_host_vars(self) -> set[Path]:
+        """Identify and return a set of unused host_vars YAML files."""
         yaml_files = find_yaml_files(self.host_vars_dir)
         for host in self.get_hosts():
             yaml_files -= {Path(self.host_vars_dir).joinpath(f"{host}.yml")}
