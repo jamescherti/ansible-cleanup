@@ -23,35 +23,38 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
+from typing import Optional
 
 from .find_imports import FindImports
 
 
-def find_all_yaml_files():
-    all_yaml_files = set()
+def find_all_yaml_files() -> set[Path]:
+    """Find all YAML files in the repository, excluding variable and role directories."""
+    all_yaml_files: set[Path] = set()
     for file_name in Path(".").glob("**/*"):
         basename = file_name.name.lower()
-        file_name = file_name.absolute()
+        file_path = file_name.absolute()
 
-        if "/host_vars/" in str(file_name) or \
-                "/group_vars/" in str(file_name) or \
-                "/roles/" in str(file_name):
+        if "host_vars" in file_path.parts or \
+                "group_vars" in file_path.parts or \
+                "roles" in file_path.parts:
             continue
 
         if basename.endswith(".yaml") or basename.endswith(".yml"):
-            all_yaml_files.add(file_name)
+            all_yaml_files.add(file_path)
 
     return all_yaml_files
 
 
-def find_yaml_files_that_are_imported(files: list[os.PathLike]):
-    playbook = None
-    for playbook_path in files:
-        playbook_path = Path(playbook_path).absolute()
+def find_yaml_files_that_are_imported(
+        files: list[str]) -> Optional[FindImports]:
+    """Parse a list of playbooks and trace all imported YAML files."""
+    playbook: Optional[FindImports] = None
+    for item in files:
+        playbook_path = Path(item).absolute()
         if not playbook_path.is_file():
             raise FileNotFoundError(f"File not found: {playbook_path}")
 
-        playbook_path = Path(playbook_path)
         if playbook:
             if playbook_path not in playbook.ignore_files:
                 new_playbook = FindImports(file_name=playbook_path,
@@ -67,7 +70,8 @@ def find_yaml_files_that_are_imported(files: list[os.PathLike]):
     return playbook
 
 
-def command_line_interface():
+def command_line_interface() -> None:
+    """Execute the command line interface logic for finding unused tasks."""
     try:
         sys.argv[1]
     except IndexError:
@@ -87,6 +91,7 @@ def command_line_interface():
         print(file_name)
 
     print()
+
     sys.exit(0)
 
     # Show imports
@@ -101,17 +106,17 @@ def command_line_interface():
     if all_yaml_files:
         print("Detailed imports:")
         print("-----------------")
-        for file_name in sorted(playbook.imports.keys()):
-            categories = playbook.imports[file_name]
-            print(file_name)
-            print("-" * len(str(file_name)))
+        for import_file in sorted(playbook.imports.keys()):
+            categories = playbook.imports[import_file]
+            print(import_file)
+            print("-" * len(str(import_file)))
             for category, imported_files in categories.items():
                 if not imported_files:
                     continue
 
                 print(f"{category}:")
-                for file_name in imported_files:
-                    print(f"    - {file_name}")
+                for imported_file in imported_files:
+                    print(f"    - {imported_file}")
                 print()
 
     if playbook.roles:
@@ -120,6 +125,8 @@ def command_line_interface():
         for item in sorted(playbook.roles):
             print(f"  - {item}")
         print()
+
+    sys.exit(0)
 
 
 if __name__ == '__main__':

@@ -173,12 +173,10 @@ class FindImports:
                 return generic_name
         return ""
 
-    def _is_supported_ansible_type(self, data: Any):
-        # Include AnsibleSequence here if a tagged wrapper lists primitives,
-        # or handle sequence evaluations explicitly
-        return bool(type(data) in (type(None), bool, int, float,
-                                   AnsibleUnicode) or isinstance(data,
-                                                                 (list, dict)))
+    def _is_supported_ansible_type(self, data: Any) -> bool:
+        # Using isinstance instead of exact type() matching catches
+        # Ansible's internal subclassed wrappers like _AnsibleTaggedStr
+        return isinstance(data, (type(None), bool, int, float, str, bytes))
 
     def _add_import(self, category: str,
                     file_name: Union[str, os.PathLike]) -> None:
