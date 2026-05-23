@@ -56,7 +56,3 @@ def command_line_interface() -> int:
         print(item)
 
     return 0
-
-
-if __name__ == '__main__':
-    sys.exit(command_line_interface())

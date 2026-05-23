@@ -63,7 +63,3 @@ def main(argv: collections.abc.Sequence[str] | None = None) -> int:
         return vars_cli()
 
     return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())

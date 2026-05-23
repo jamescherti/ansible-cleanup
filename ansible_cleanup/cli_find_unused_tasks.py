@@ -129,7 +129,3 @@ def command_line_interface(playbooks: list[str]) -> int:
     #     print()
 
     return 0
-
-
-if __name__ == '__main__':
-    sys.exit(command_line_interface(sys.argv[1:]))
