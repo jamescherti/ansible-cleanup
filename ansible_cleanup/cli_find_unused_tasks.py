@@ -20,16 +20,17 @@
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 from typing import Optional
+
+import ansible
 
 from .find_imports import FindImports
 
 
 def find_all_yaml_files() -> set[Path]:
-    """Find all YAML files in the repository, excluding variable and role directories."""
+    """Find YAML files in the repo, excluding variable and role directories."""
     all_yaml_files: set[Path] = set()
     for file_name in Path(".").glob("**/*"):
         basename = file_name.name.lower()
@@ -46,14 +47,12 @@ def find_all_yaml_files() -> set[Path]:
     return all_yaml_files
 
 
-def find_yaml_files_that_are_imported(
-        files: list[str]) -> Optional[FindImports]:
+def find_yaml_files_that_are_imported(files: list[str]) \
+        -> Optional[FindImports]:
     """Parse a list of playbooks and trace all imported YAML files."""
-    playbook: Optional[FindImports] = None
+    playbook = None
     for item in files:
         playbook_path = Path(item).absolute()
-        if not playbook_path.is_file():
-            raise FileNotFoundError(f"File not found: {playbook_path}")
 
         if playbook:
             if playbook_path not in playbook.ignore_files:
@@ -80,7 +79,12 @@ def command_line_interface() -> None:
 
     all_yaml_files = find_all_yaml_files()
 
-    playbook = find_yaml_files_that_are_imported(sys.argv[1:])
+    try:
+        playbook = find_yaml_files_that_are_imported(sys.argv[1:])
+    except ansible.errors.AnsibleFileNotFound as err:
+        print(f"Error: {err}", file=sys.stderr)
+        sys.exit(1)
+
     if not playbook:
         print("Nothing to do.")
         sys.exit(1)

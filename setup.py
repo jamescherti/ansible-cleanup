@@ -26,10 +26,10 @@ setup(
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "ansible-cleanup-find-imports=ansible_cleanup.cli_find_unused_tasks:"
+            "ansible-cleanup-unused-imports=ansible_cleanup.cli_find_unused_tasks:"
             "command_line_interface",
 
-            "ansible-cleanup-find-vars=ansible_cleanup.cli_find_unused_vars:"
+            "ansible-cleanup-unused-vars=ansible_cleanup.cli_find_unused_vars:"
             "command_line_interface",
         ],
     },
