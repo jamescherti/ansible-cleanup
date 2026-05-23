@@ -27,8 +27,7 @@ from typing import Any, Union
 import ansible
 from ansible.parsing.dataloader import DataLoader
 # pylint: disable=no-name-in-module
-from ansible.parsing.yaml.objects import (AnsibleMapping, AnsibleSequence,
-                                          AnsibleUnicode)
+from ansible.parsing.yaml.objects import AnsibleMapping, AnsibleSequence
 
 
 class InvalidFileFormat(Exception):

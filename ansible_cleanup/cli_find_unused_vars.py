@@ -24,11 +24,6 @@ from .ansible_vars import AnsibleVars
 
 def command_line_interface():
     ansible_vars = AnsibleVars("hosts")
-    # print("[HOST VAR DIR]", ansible_vars.host_vars_dir)
-    # print("[GROUP VAR DIR]", ansible_vars.group_vars_dir)
-    # print("[HOSTS]", ansible_vars.get_hosts())
-    # print("[GROUPS]", ansible_vars.get_groups())
-    # print()
     for item in ansible_vars.find_unused_host_vars():
         print(item)
     for item in ansible_vars.find_unused_group_vars():
