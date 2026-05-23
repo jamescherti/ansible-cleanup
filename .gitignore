@@ -1,0 +1,7 @@
+/.coverage
+/coverage.json
+/build
+/dist
+/ansible_cleanup.egg-info
+*.pyc
+*/__pycache__

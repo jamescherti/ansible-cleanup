@@ -1,0 +1,10 @@
+---
+
+- apt:
+    force_apt_get: true
+    name:
+      - bash
+
+- name: "Import Tasks: from tasks6.yaml"
+  import_tasks: "tasks6.yaml"
+  tags: tasks6

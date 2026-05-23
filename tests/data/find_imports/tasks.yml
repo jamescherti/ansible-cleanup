@@ -1,0 +1,7 @@
+---
+
+- include_vars: group_vars/vault.yml
+  no_log: true
+
+- name: "Set fact: task_done"
+  set_fact: task_done="1"

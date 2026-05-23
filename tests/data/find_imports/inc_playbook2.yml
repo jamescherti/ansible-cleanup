@@ -1,0 +1,12 @@
+---
+
+- hosts: host2
+  tasks:
+    - apt:
+        force_apt_get: true
+        name:
+          - bash
+
+    - name: "Block"
+      block:
+        - import_playbook: "inc_playbook3.yml"

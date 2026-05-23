@@ -1,0 +1,64 @@
+---
+
+- hosts: the_host
+  gather_facts: no
+  vars:
+    number: 1
+    float: 1.0
+    string: "Hello"
+    list: ["this", "is", "a", "list"]
+    dict: {"key": "value"}
+  roles:
+    - {role: role1, var: value}
+    - role2
+  pre_tasks:
+  - include_vars: group_vars/vault.yml
+    no_log: true
+    tags:
+      - tag
+
+  tasks:
+  - ansible.builtin.include_vars: group_vars/vault.yml
+    no_log: true
+    tags:
+      - tag
+
+  - import_tasks: tasks1.yml
+
+  - block:
+      - block:
+          - ansible.builtin.import_tasks: "tasks2.yaml"
+            tags: tasks2
+
+  - import_role:
+      name: role3
+    vars:
+      var: value
+
+  - import_playbook: inc_playbook1.yml
+
+  - ansible.builtin.import_role:
+      name: role4
+    vars:
+      var: value
+
+- hosts: the_host2
+  gather_facts: no
+  tasks:
+    - include_tasks: tasks3.yml
+
+    - block:
+        - block:
+            - ansible.builtin.include_tasks: "tasks4.yaml"
+
+    - include_role:
+        name: role5
+      vars:
+        var: value
+
+    - ansible.builtin.include_role:
+        name: role6
+      vars:
+        var: value
+
+    - import_playbook: inc_playbook2.yml

@@ -1,0 +1,8 @@
+---
+
+- hosts: host3
+  tasks:
+    - apt:
+        force_apt_get: true
+        name:
+          - bash
