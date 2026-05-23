@@ -1,6 +1,6 @@
 # ansible-cleanup - Cleanup an Ansible project
 
-[Ansible-cleanup](https://github.com/jamescherti/ansible-cleanup) provides command-line tools to find and remove unused playbooks, tasks, group variables, and host variables. It maintains a clean codebase by recursively scanning your Ansible repository and listing files that are safe to delete.
+[Ansible-cleanup](https://github.com/jamescherti/ansible-cleanup) provides a command line tool to find and remove unused playbooks, tasks, group variables, and host variables. It maintains a clean codebase by recursively scanning your Ansible repository and listing files that are safe to delete.
 
 ## Features
 
@@ -17,11 +17,13 @@ pip install --user git+https://github.com/jamescherti/ansible-cleanup
 
 The pip command above will install the executable files in `~/.local/bin/`.
 
-## Command Line Tools
+## Command Line Interface
 
-### ansible-cleanup-imports
+The `ansible-cleanup` executable routes execution to specific cleanup modules using subcommands.
 
-This command acts as a static code analyzer for your Ansible execution paths. It takes a root playbook (or multiple playbooks) as an argument and recursively traces every `import_playbook`, `include_tasks`, `import_role`, and related Ansible includes. It then compares the files it successfully resolved against all the YAML files in your repository to find the orphans.
+### ansible-cleanup imports
+
+This subcommand acts as a static code analyzer for your Ansible execution paths. It takes a root playbook (or multiple playbooks) as an argument and recursively traces every `import_playbook`, `include_tasks`, `import_role`, and related Ansible includes. It then compares the files it successfully resolved against all the YAML files in your repository to find the orphans.
 
 As infrastructure evolves, old task files and sub-playbooks are often disconnected from the main execution tree but are left behind in the repository. Manually tracing YAML includes across dozens of files is tedious and prone to human error. This command automates the discovery of dead code, ensuring your repository only contains files that are actually executed.
 
@@ -30,15 +32,14 @@ As infrastructure evolves, old task files and sub-playbooks are often disconnect
 Pass your primary entry-point playbook (e.g., `site.yml` or `main.yml`) as an argument. The script will output the absolute paths of any `.yml` or `.yaml` files that are not referenced anywhere in the execution tree.
 
 ```bash
-$ ansible-cleanup-imports site.yaml
+$ ansible-cleanup imports site.yaml
 /path/to/repo/playbooks/old_deployment_tasks.yml
 /path/to/repo/playbooks/deprecated_setup.yaml
-
 ```
 
-### ansible-cleanup-vars
+### ansible-cleanup vars
 
-This command manages your variable definitions. It reads your local `hosts` inventory file and builds a comprehensive list of all active hosts and groups. It then cross-references this active list against the files located in your `host_vars` and `group_vars` directories to find files named after hosts or groups that are not defined in the inventory.
+This subcommand manages your variable definitions. It reads your local `hosts` inventory file and builds a comprehensive list of all active hosts and groups. It then cross-references this active list against the files located in your `host_vars` and `group_vars` directories to find files named after hosts or groups that are not defined in the inventory.
 
 When servers are decommissioned or host groups are renamed, engineers frequently remove them from the `hosts` file but forget to delete the corresponding variable files in `host_vars/` or `group_vars/`. Over time, this leads to significant repository bloat and confusion over which variables are actually applied. This tool securely flags those forgotten files for deletion.
 
@@ -47,7 +48,7 @@ Execute the command in the directory containing your `hosts` file, `host_vars` d
 #### Usage:
 
 ```bash
-$ ansible-cleanup-vars
+$ ansible-cleanup vars
 /path/to/repo/host_vars/decommissioned-db-server-01.yml
 /path/to/repo/group_vars/legacy-web-nodes.yaml
 

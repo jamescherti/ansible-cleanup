@@ -33,8 +33,8 @@ def find_all_yaml_files() -> set[Path]:
     """Find YAML files in the repo, excluding variable and role directories."""
     all_yaml_files: set[Path] = set()
     for file_name in Path(".").glob("**/*"):
-        basename = file_name.name.lower()
-        file_path = file_name.absolute()
+        basename: str = file_name.name.lower()
+        file_path: Path = file_name.absolute()
 
         if "host_vars" in file_path.parts or \
                 "group_vars" in file_path.parts or \
@@ -52,7 +52,7 @@ def find_yaml_files_that_are_imported(files: list[str]) \
     """Parse a list of playbooks and trace all imported YAML files."""
     playbook = None
     for item in files:
-        playbook_path = Path(item).absolute()
+        playbook_path: Path = Path(item).absolute()
 
         if playbook:
             if playbook_path not in playbook.ignore_files:
@@ -69,25 +69,25 @@ def find_yaml_files_that_are_imported(files: list[str]) \
     return playbook
 
 
-def command_line_interface() -> None:
+def command_line_interface(playbooks: list[str]) -> int:
     """Execute the command line interface logic for finding unused tasks."""
-    try:
-        sys.argv[1]
-    except IndexError:
-        print(f"Usage: {sys.argv[0]} <playbook.yaml>", file=sys.stderr)
-        sys.exit(1)
+    if not playbooks:
+        print("Usage: ansible-cleanup imports <playbook.yaml>",
+              file=sys.stderr)
+        return 1
 
-    all_yaml_files = find_all_yaml_files()
+    all_yaml_files: set[Path] = find_all_yaml_files()
 
     try:
-        playbook = find_yaml_files_that_are_imported(sys.argv[1:])
+        playbook: Optional[FindImports] = find_yaml_files_that_are_imported(
+            playbooks)
     except ansible.errors.AnsibleFileNotFound as err:
         print(f"Error: {err}", file=sys.stderr)
-        sys.exit(1)
+        return 1
 
     if not playbook:
         print("Nothing to do.")
-        sys.exit(1)
+        return 1
 
     # Show unused tasks/playbooks
     all_yaml_files -= playbook.get_all_files()
@@ -103,7 +103,7 @@ def command_line_interface() -> None:
     #     for item in sorted(playbook.failed):
     #         print(f"[FAILED] {item}")
     #     print()
-    # sys.exit(0)
+    # return 0
 
     # if all_yaml_files:
     #     print("Detailed imports:")
@@ -128,8 +128,8 @@ def command_line_interface() -> None:
     #         print(f"  - {item}")
     #     print()
 
-    sys.exit(0)
+    return 0
 
 
 if __name__ == '__main__':
-    command_line_interface()
+    sys.exit(command_line_interface(sys.argv[1:]))

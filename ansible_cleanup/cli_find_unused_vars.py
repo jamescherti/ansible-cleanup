@@ -28,7 +28,7 @@ from ansible import constants as C
 from .ansible_vars import AnsibleVars
 
 
-def command_line_interface() -> None:
+def command_line_interface() -> int:
     """Find unused variables and print them to standard output."""
     # pylint: disable=no-member
     inventory_sources: Any = C.DEFAULT_HOST_LIST
@@ -45,7 +45,7 @@ def command_line_interface() -> None:
             f"Error: Inventory file or directory does not exist: {hosts_path}",
             file=sys.stderr,
         )
-        sys.exit(1)
+        return 1
 
     ansible_vars: AnsibleVars = AnsibleVars(hosts_file)
 
@@ -55,6 +55,8 @@ def command_line_interface() -> None:
     for item in ansible_vars.find_unused_group_vars():
         print(item)
 
+    return 0
+
 
 if __name__ == '__main__':
-    command_line_interface()
+    sys.exit(command_line_interface())

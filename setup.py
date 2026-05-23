@@ -71,16 +71,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            (
-                "ansible-cleanup-imports="
-                "ansible_cleanup.cli_find_unused_tasks:"
-                "command_line_interface"
-            ),
-            (
-                "ansible-cleanup-vars="
-                "ansible_cleanup.cli_find_unused_vars:"
-                "command_line_interface"
-            ),
+            "ansible-cleanup=ansible_cleanup.cli:main",
         ],
     },
 )
