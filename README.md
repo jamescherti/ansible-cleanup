@@ -1,6 +1,6 @@
 # ansible-cleanup - Cleanup an Ansible project
 
-Ansible-cleanup provides command-line tools to find and remove unused playbooks, tasks, group variables, and host variables. It maintains a clean codebase by recursively scanning your Ansible repository and listing files that are safe to delete.
+[Ansible-cleanup](https://github.com/jamescherti/ansible-cleanup) provides command-line tools to find and remove unused playbooks, tasks, group variables, and host variables. It maintains a clean codebase by recursively scanning your Ansible repository and listing files that are safe to delete.
 
 ## Features
 
