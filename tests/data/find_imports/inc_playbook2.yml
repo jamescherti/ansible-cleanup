@@ -3,7 +3,6 @@
 - hosts: host2
   tasks:
     - apt:
-        force_apt_get: true
         name:
           - bash
 

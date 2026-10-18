@@ -2,7 +2,6 @@
 
 - name: "Apt-get install packages"
   apt:
-    force_apt_get: true
     name:
       - bash
 
