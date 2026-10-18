@@ -3,6 +3,5 @@
 - hosts: host
   tasks:
     - apt:
-        force_apt_get: true
         name:
           - bash
