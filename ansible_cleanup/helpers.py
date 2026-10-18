@@ -37,8 +37,9 @@ class AnsibleConfig:
         return str(self.config_parser.get(section, variable))
 
 
-def existing_file_with_ext(base_path: os.PathLike,
-                           list_extensions: Iterable[str]) -> Path:
+def existing_file_with_ext(
+    base_path: os.PathLike, list_extensions: Iterable[str]
+) -> Path:
     """Return a path of an existing file that ends with one of the extensions
     provided.
 
