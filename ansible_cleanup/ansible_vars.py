@@ -32,10 +32,12 @@ from .helpers import find_yaml_files
 class AnsibleVars:
     """Manage and validate Ansible host and group variables."""
 
-    def __init__(self,
-                 hosts_file: os.PathLike,
-                 host_vars_dir: os.PathLike = Path('host_vars'),
-                 group_vars_dir: os.PathLike = Path('group_vars')) -> None:
+    def __init__(
+        self,
+        hosts_file: os.PathLike,
+        host_vars_dir: os.PathLike = Path("host_vars"),
+        group_vars_dir: os.PathLike = Path("group_vars"),
+    ) -> None:
         """Initialize the AnsibleVars instance with the inventory file."""
         self.hosts_file = Path(hosts_file)
         self.base_dir = Path(self.hosts_file).parent
@@ -51,8 +53,8 @@ class AnsibleVars:
         # Load hosts file
         data_loader = DataLoader()
         self.inventory_manager = InventoryManager(
-            loader=data_loader,
-            sources=[str(self.hosts_file)])
+            loader=data_loader, sources=[str(self.hosts_file)]
+        )
 
     def get_hosts(self) -> set[str]:
         """Return a set of all host names defined in the inventory."""

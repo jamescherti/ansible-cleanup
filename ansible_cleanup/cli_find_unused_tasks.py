@@ -36,9 +36,11 @@ def find_all_yaml_files() -> set[Path]:
         basename: str = file_name.name.lower()
         file_path: Path = file_name.absolute()
 
-        if "host_vars" in file_path.parts or \
-                "group_vars" in file_path.parts or \
-                "roles" in file_path.parts:
+        if (
+            "host_vars" in file_path.parts
+            or "group_vars" in file_path.parts
+            or "roles" in file_path.parts
+        ):
             continue
 
         if basename.endswith(".yaml") or basename.endswith(".yml"):
@@ -47,8 +49,7 @@ def find_all_yaml_files() -> set[Path]:
     return all_yaml_files
 
 
-def find_yaml_files_that_are_imported(files: list[str]) \
-        -> Optional[FindImports]:
+def find_yaml_files_that_are_imported(files: list[str]) -> Optional[FindImports]:
     """Parse a list of playbooks and trace all imported YAML files."""
     playbook = None
     for item in files:
@@ -56,14 +57,16 @@ def find_yaml_files_that_are_imported(files: list[str]) \
 
         if playbook:
             if playbook_path not in playbook.ignore_files:
-                new_playbook = FindImports(file_name=playbook_path,
-                                           base_dir=playbook_path.parent)
+                new_playbook = FindImports(
+                    file_name=playbook_path, base_dir=playbook_path.parent
+                )
                 new_playbook.merge(playbook)
                 new_playbook.find_imports()
                 playbook = new_playbook
         else:
-            playbook = FindImports(file_name=playbook_path,
-                                   base_dir=playbook_path.parent)
+            playbook = FindImports(
+                file_name=playbook_path, base_dir=playbook_path.parent
+            )
             playbook.find_imports()
 
     return playbook
@@ -72,15 +75,13 @@ def find_yaml_files_that_are_imported(files: list[str]) \
 def command_line_interface(playbooks: list[str]) -> int:
     """Execute the command line interface logic for finding unused tasks."""
     if not playbooks:
-        print("Usage: ansible-cleanup imports <playbook.yaml>",
-              file=sys.stderr)
+        print("Usage: ansible-cleanup imports <playbook.yaml>", file=sys.stderr)
         return 1
 
     all_yaml_files: set[Path] = find_all_yaml_files()
 
     try:
-        playbook: Optional[FindImports] = find_yaml_files_that_are_imported(
-            playbooks)
+        playbook: Optional[FindImports] = find_yaml_files_that_are_imported(playbooks)
     except ansible.errors.AnsibleFileNotFound as err:
         print(f"Error: {err}", file=sys.stderr)
         return 1
