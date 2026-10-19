@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 import ansible
 
@@ -32,7 +31,7 @@ from .find_imports import FindImports
 def find_all_yaml_files() -> set[Path]:
     """Find YAML files in the repo, excluding variable and role directories."""
     all_yaml_files: set[Path] = set()
-    for file_name in Path(".").glob("**/*"):
+    for file_name in Path().glob("**/*"):
         basename: str = file_name.name.lower()
         file_path: Path = file_name.absolute()
 
@@ -49,7 +48,7 @@ def find_all_yaml_files() -> set[Path]:
     return all_yaml_files
 
 
-def find_yaml_files_that_are_imported(files: list[str]) -> Optional[FindImports]:
+def find_yaml_files_that_are_imported(files: list[str]) -> FindImports | None:
     """Parse a list of playbooks and trace all imported YAML files."""
     playbook = None
     for item in files:
@@ -81,7 +80,7 @@ def command_line_interface(playbooks: list[str]) -> int:
     all_yaml_files: set[Path] = find_all_yaml_files()
 
     try:
-        playbook: Optional[FindImports] = find_yaml_files_that_are_imported(playbooks)
+        playbook: FindImports | None = find_yaml_files_that_are_imported(playbooks)
     except ansible.errors.AnsibleFileNotFound as err:
         print(f"Error: {err}", file=sys.stderr)
         return 1

@@ -22,10 +22,14 @@
 from pathlib import Path
 
 import pytest
-from ansible_cleanup.helpers import (AnsibleConfig, existing_file_with_ext,
-                                     find_yaml_files)
 
-DATA_PATH = Path(".").joinpath("tests", "data", "helpers")
+from ansible_cleanup.helpers import (
+    AnsibleConfig,
+    existing_file_with_ext,
+    find_yaml_files,
+)
+
+DATA_PATH = Path().joinpath("tests", "data", "helpers")
 
 
 def test_ansible_config():
