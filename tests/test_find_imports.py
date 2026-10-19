@@ -22,9 +22,10 @@
 from pathlib import Path
 
 import pytest
+
 from ansible_cleanup.find_imports import FindImports
 
-DATA_PATH = Path(".").joinpath("tests", "data", "find_imports")
+DATA_PATH = Path().joinpath("tests", "data", "find_imports")
 PLAYBOOK_PATH = DATA_PATH.joinpath("playbook.yml").absolute()
 PLAYBOOK_DIR = PLAYBOOK_PATH.parent.absolute()
 

@@ -22,9 +22,10 @@
 from pathlib import Path
 
 import pytest
+
 from ansible_cleanup.ansible_vars import AnsibleVars
 
-DATA_PATH = Path(".").joinpath("tests", "data", "ansible_vars")
+DATA_PATH = Path().joinpath("tests", "data", "ansible_vars")
 HOSTS_FILE = DATA_PATH.joinpath("hosts")
 
 

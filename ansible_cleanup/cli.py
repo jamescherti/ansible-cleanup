@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import argparse
 import collections.abc
-import sys
 
 from ansible_cleanup.cli_find_unused_tasks import command_line_interface as imports_cli
 from ansible_cleanup.cli_find_unused_vars import command_line_interface as vars_cli
