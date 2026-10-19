@@ -209,9 +209,7 @@ class FindImports:
         for item in data:
             self._find_imports_recursive(item)
 
-    def _parse_ansible_mapping(
-        self, data: AnsibleMapping | dict
-    ) -> tuple[Any, bool]:
+    def _parse_ansible_mapping(self, data: AnsibleMapping | dict) -> tuple[Any, bool]:
         error_data = data
         error = False
         for ansible_func, sub_data in data.items():
