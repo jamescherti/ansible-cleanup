@@ -34,15 +34,19 @@ DATA_PATH = Path().joinpath("tests", "data", "helpers")
 
 def test_ansible_config():
     ansible_config = AnsibleConfig(DATA_PATH.joinpath("ansible.cfg"))
-    assert ansible_config.get('defaults', 'host_vars') == "new_host_var"
-    assert ansible_config.get('defaults', 'group_vars') == "new_group_var"
+    assert ansible_config.get("defaults", "host_vars") == "new_host_var"
+    assert ansible_config.get("defaults", "group_vars") == "new_group_var"
 
 
 def test_existing_file_with_ext():
     base_path = DATA_PATH.joinpath("group_vars", "group4")
-    assert existing_file_with_ext(
-        base_path, [".bmp", ".yml", ".yaml"],
-    ).name == "group4.yml"
+    assert (
+        existing_file_with_ext(
+            base_path,
+            [".bmp", ".yml", ".yaml"],
+        ).name
+        == "group4.yml"
+    )
 
 
 def test_existing_file_with_ext_not_found():
@@ -52,9 +56,9 @@ def test_existing_file_with_ext_not_found():
 
 
 def test_find_yaml_files():
-    assert find_yaml_files(DATA_PATH) == \
-        set(DATA_PATH.glob("**/*")) - \
-        {DATA_PATH.joinpath("group_vars"),
-         DATA_PATH.joinpath("host_vars"),
-         DATA_PATH.joinpath("ansible.cfg"),
-         DATA_PATH.joinpath("hosts")}
+    assert find_yaml_files(DATA_PATH) == set(DATA_PATH.glob("**/*")) - {
+        DATA_PATH.joinpath("group_vars"),
+        DATA_PATH.joinpath("host_vars"),
+        DATA_PATH.joinpath("ansible.cfg"),
+        DATA_PATH.joinpath("hosts"),
+    }

@@ -35,20 +35,18 @@ def ansible_vars():
 
 
 def test_ansible_vars(ansible_vars: AnsibleVars):
-    assert ansible_vars.get_hosts() == {"host1",
-                                        "host2",
-                                        "host3"}
+    assert ansible_vars.get_hosts() == {"host1", "host2", "host3"}
 
 
 def test_ansible_groups(ansible_vars: AnsibleVars):
-    assert ansible_vars.get_groups() == {'all', 'ungrouped',
-                                         'group1', 'group2'}
+    assert ansible_vars.get_groups() == {"all", "ungrouped", "group1", "group2"}
 
 
 def test_unused_host_vars(ansible_vars: AnsibleVars):
-    assert ansible_vars.find_unused_host_vars() == \
-        {DATA_PATH.joinpath("host_vars", "host4.yml"),
-         DATA_PATH.joinpath("host_vars", "host5.yaml")}
+    assert ansible_vars.find_unused_host_vars() == {
+        DATA_PATH.joinpath("host_vars", "host4.yml"),
+        DATA_PATH.joinpath("host_vars", "host5.yaml"),
+    }
 
 
 def test_unused_group_vars(ansible_vars: AnsibleVars):
