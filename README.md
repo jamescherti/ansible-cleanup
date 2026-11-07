@@ -1,7 +1,7 @@
 # ansible-cleanup - Cleanup an Ansible project
 
 - Author: James Cherti <[https://www.jamescherti.com/](https://www.jamescherti.com/)>
-- License: GPL
+- License: GPL 3.0 or later
 
 [Ansible-cleanup](https://github.com/jamescherti/ansible-cleanup) provides a command line tool to find and remove unused playbooks, tasks, group variables, and host variables. It maintains a clean codebase by recursively scanning your Ansible repository and listing files that are safe to delete.
 
