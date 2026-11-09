@@ -23,7 +23,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ansible-cleanup"
-version = "0.9.9"
+version = "1.0.0"
 description = "Utilities for detecting unused imports and variables in Ansible projects"
 readme = "README.md"
 authors = [
