@@ -70,3 +70,12 @@ You should have received a copy of the GNU General Public License along with thi
 ## Links
 
 - [ansible-cleanup @GitHub](https://github.com/jamescherti/ansible-cleanup)
+
+Other projects by the same author:
+
+- [ansible-role-apt](https://github.com/jamescherti/ansible-role-apt)
+- [ansible-auto-upgrade](https://github.com/jamescherti/ansible-role-auto-upgrade)
+- [ansible-role-tuned](https://github.com/jamescherti/ansible-role-tuned)
+- [ansible-role-flatpak](https://github.com/jamescherti/ansible-role-flatpak)
+- [ansible-role-reniced](https://github.com/jamescherti/ansible-role-reniced)
+- [ansible-role-gitolite](https://github.com/jamescherti/ansible-role-gitolite)
